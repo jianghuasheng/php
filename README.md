@@ -6,4 +6,4 @@
 
 <a href="http://exam.jianghuasheng.cn/course/index.html" target="_blank">这里是测试传送门（仅限<b style='color:red;'>广东石油化工学院同学</b>哟）</a>
 
-这是源码地址： [https://github.com/jianghuasheng/php/curl](https://github.com/jianghuasheng/php/curl "源码")
+这是源码地址： [https://github.com/jianghuasheng/php/tree/master/curl](https://github.com/jianghuasheng/php/tree/master/curl "源码")
