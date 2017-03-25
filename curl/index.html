@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+	<title>欢迎使用课程查询测试接口</title>
+    <link rel="icon" href="http://avatar.csdn.net/5/F/C/1_j_h_s.jpg">
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		body{text-align: center;font-family: "微软雅黑";font-size: 1em;}
+		header{width: 100%;height: 40px;background-color: #54A4F5;position: fixed;top:0;box-shadow: 0 0 10px #999;}
+		header h3{color: #fff;font-weight: bold;line-height: 40px;}
+		section ul li{margin-top: 15px;}
+		section ul li:first-child{margin-top: 40px;}
+		section ul li .title{height:30px;line-height: 30px;color:#54A4F5;font-size: 1em;font-weight: bold;border-bottom: 1px solid #e0e0e0;background-color: #e0e0e0;}
+		section ul li .score{text-align: left;height:25px;line-height: 25px;color:#54A4F5;font-size: .8em;font-weight: bold;background-color: #f1f1f1;padding-left: 20px;}
+		section ul li .score b{color: #666;}
+		section ul li p{font-size: .8em;line-height: 2em;}
+		#login{padding-top: 35px;min-height: 380px;}
+		#login ul .til{font-size: 1em;color:#54A4F5;font-weight: bold;}
+		input,select{width: 60%;height: 30px;border:1px solid blue;border-radius: 5px;padding-left: 8px;max-width: 300px;}
+		button{width: 40%;background-color: #2B91F8;color:#fff;border:none;height: 33px;border-radius: 10px;font-weight: bold;max-width: 200px;margin-top: 30px;}
+		select{width: 40%;max-width: 200px;}
+		footer{display: block;padding-top: 20px;border-top: 1px solid #e0e0e0;}
+		footer p{font-size: 12px;line-height: 20px;}
+		footer a{color:#333;font-weight: bold;line-height: 25px;}
+	</style>
+</head>
+<body>
+	<header>
+		<h3 id="title">欢迎使用课程查询测试接口</h3>
+	</header>
+	<section id="login">
+		<ul>
+			<li class="til">请输入学号和密码进行测试:</li>
+			<li><input type="phone" name="xuehao" id="xuehao"></li>
+			<li><input type="password" name="password" id="password"></li>
+			<li>
+				<select name="type" id="type">
+				  <option value ="1" selected="selected">课 程</option>
+				  <option value ="2">成 绩</option>
+				</select>
+			</li>
+			<li><button onclick="submitData();" id="button">点我查询</button></li>
+		</ul>
+	</section>
+	<section id="con">
+		<ul id="ul">
+		</ul>
+	</section>
+	<footer>
+		<p>Copyright (c) 2017 </p>
+		<p><a href="http://www.jianghuasheng.cn">http://www.jianghuasheng.cn</a></p>
+		<p>All rights reserved.</p>
+		<p style="color:red;">测试专用，未经允许调用必追究责任！</p>
+	</footer>
+</body>
+<script type="text/javascript">
+
+	// W3C标准的ajax
+	var xmlhttp;
+	function loadXMLDoc(url,param) {
+		// console.log(param);
+	    xmlhttp = null;
+	    if (window.XMLHttpRequest) { // code for all new browsers
+	        xmlhttp = new XMLHttpRequest();
+	    } else if (window.ActiveXObject) { // code for IE5 and IE6
+	        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	    if (xmlhttp != null) {
+	        xmlhttp.onreadystatechange = state_Change;
+	        xmlhttp.open("POST", url, true);
+	        // 发送数据
+	        //POST方式需要自己设置http的请求头
+			xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+			//POST方式发送数据
+			xmlhttp.send("xuehao="+param.xuehao+"&password="+param.password+"&type="+param.type);
+	    } else {
+	        alert("Your browser does not support XMLHTTP.");
+	    }
+	}
+
+	function state_Change() {
+	    if (xmlhttp.readyState == 4) { // 4 = "loaded"
+	        if (xmlhttp.status == 200) { // 200 = OK
+	            // console.log(xmlhttp);
+	            var data = JSON.parse(xmlhttp.response);
+	            // console.log(data);
+	            var code = data.code;
+	            var msg = data.msg;
+	            //读取成功
+	            // console.log(code);
+	           	if (code == 201) {
+	           		document.getElementById('login').style.display="none";
+	           		document.getElementById('con').style.display="block";
+	          
+	           		var type = data.type;
+
+	           		var data = JSON.parse(data.data);
+	           		// console.log(data);
+	           		// 类型
+	           		if (type == "1") {
+	           			for (var i = 0; i < data.length; i++) {
+	           				var li = document.createElement("li");
+		           			li.innerHTML = "<p class='title'>"+data[i][1]+"</p><p>"+data[i][0]+"</p><p>"+data[i][3]+"</p><p>"+data[i][2]+"</p>";
+		           			document.getElementById("ul").appendChild(li);
+		           		}
+	           		// 成绩
+	           		}else{
+	           			document.getElementById("title").innerHTML="欢迎使用成绩查询测试接口";
+	           			for (var i = 0; i < data.length; i++) {
+	           				// console.log(data[i]);
+	           				var li = document.createElement("li");
+		           			li.innerHTML = "<p class='score'>学期：<b>"+data[i][0]+"</b> | 科目：<b>"+data[i][1]+"</b></p><p class='score'>学分：<b>"+data[i][2]+"</b> | 成绩：<b>"+data[i][3]+" "+data[i][4]+" "+data[i][5]+" "+data[i][6]+"</b></p>";
+		           			document.getElementById("ul").appendChild(li);
+		           		}
+	           		}
+	           		// if (true) {}
+	           		
+	           	//读取出错
+	           	}else{
+	           		alert(msg);
+	           	}
+	            // console.log(data);
+	            // console.log(JSON.parse(data.data));
+	        } else {
+	            alert("异步访问失败，请您重试！");
+	        }
+	    }
+	}
+
+	// loadXMLDoc('api.php');
+	var submitData = function () {
+		var xuehao = document.getElementById('xuehao').value;
+		var password = document.getElementById('password').value;
+		var type = document.getElementById('type').value;
+		// console.log(type);
+		if (xuehao == '' || password == '') {
+			alert("亲，学号和密码不能为空哟！");
+			return false;
+		}
+		if (isNaN(xuehao)) {
+			alert("亲，学号的格式好像不对哟...");
+			return false;
+		}
+		// 执行ajax查询
+		var param = {
+			xuehao:xuehao,
+			password:password,
+			type:type
+		};
+		// console.log(param);
+		//不能点击
+		document.getElementById('button').setAttribute("disabled","disabled");
+		document.getElementById('button').style.backgroundColor="#e0e0e0";
+		document.getElementById('button').innerHTML="正在查询中...";
+		// 加载中的样式...
+		loadXMLDoc('api.php',param)
+	}
+
+	window.onload = function () {
+		document.getElementById('con').style.display="none";
+	}
+</script>
+</html>
